@@ -1,36 +1,16 @@
 import csv
-from os import name, write
+import os
+from os import name, read, write
+import datetime as dt
 from datetime import date
+from typing import Counter
 
 today = date.today()
 print('Todays date:', today.strftime('%x'))
 
 print('Ultimaker Cura Printer Settings. Input settings below!')
 
-# def settings_name():
-#     print('\nType your name')
-#     setName = input('Name: ')
-
-#     print(f'\nThanks {setName}! Lets get started\n')
-
-#     nameDict = {}
-    # while True: 
-        # if save.lower() == {save}:
-        #     nameDict['name'] = setName
-        #     print('Name saved!\n\n')
-        #     break
-        # elif save.lower() == 'n':
-        #     print('Okay, lets continue\n\n')
-        #     break
-        # else: 
-        #     print('Please type y or n. Goodbye')
-        #     exit()
-# settings_name()
-
-# Allows user to configure file name
-settingsName = input('Give your file a name: ')
-
-print('-------Ultimaker Cura Printer Settings-------')
+print('-------Ultimaker Cura Printer Settings-------\n')
 printTemp = input('Printing Tempterature: ')
 buildPlateTmp = input('Build Plate Temperature: ')
 flow = input('Flow (%): ')
@@ -42,8 +22,19 @@ retractSpeed = input('Retraction Speed (mm/s): ')
 retractExtraPrimeAmt = input('Retraction Extra Prime Amount: ')
 combingMode = input('Combing Mode: ')
 
+counter = 0 
+fileName = 'settings_{}'
+while os.path.isfile(fileName.format(counter)):
+    counter += 1
+fileName = fileName.format(counter)
+
+if os.path.exists(fileName):
+    append_newFile = 'a' #append if exists
+else:
+    append_newFile = 'w' #make new file
+
 '''writes data to .csv file'''
-with open('{}.csv'.format(settingsName), 'w+') as file:
+with open('{}.csv'.format(fileName), 'w') as file:
     myData = csv.writer(file)
     myData.writerow([
         'Printing Temperature',
@@ -69,4 +60,5 @@ with open('{}.csv'.format(settingsName), 'w+') as file:
         retractExtraPrimeAmt,
         combingMode
     ])
-    print('\nDownloading {}.csv file. Enjoy!'.format(settingsName))
+
+    print('\nDownloading {}. Enjoy!'.format(fileName))
